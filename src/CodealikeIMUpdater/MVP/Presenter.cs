@@ -45,16 +45,35 @@ namespace CodealikeIMUpdater.MVP
 
             view.Save += (model) =>
             {
-                this.settings = model;
-                this.updateInterval = model.UpdateInterval * 60 * 1000;
-                this.updateTimer_Tick(null, null);
-                this.updateTimer.Start();
+                if (VerifySettings(model))
+                {
+                    this.settings = model;
+                    this.updateInterval = model.UpdateInterval * 60 * 1000;
+                    this.updateTimer_Tick(null, null);
+                    this.updateTimer.Start();
+                }
+                else
+                {
+                    view.ShowError("Settings not valid.");
+                }
             };
 
             view.SetUpdateInterval += (interval) =>
             {
                 this.updateInterval = interval * 60 * 1000;
+                this.updateTimer.Interval = this.updateInterval;
+                this.updateTimer.Stop();
+                this.updateTimer.Start();
             };
+        }
+
+        private bool VerifySettings(IMUpdaterSettings model)
+        {
+            return model != null &&
+                model.HipChatStatusMappings != null &&
+                !string.IsNullOrWhiteSpace(model.CodealikeUsername) &&
+                !string.IsNullOrWhiteSpace(model.HipChatEmail) &&
+                !string.IsNullOrWhiteSpace(model.HipChatToken);
         }
 
         private void updateTimer_Tick(object sender, EventArgs e)
