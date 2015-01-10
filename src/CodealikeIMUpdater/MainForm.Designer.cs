@@ -343,7 +343,7 @@
             this.toolStripSeparator1,
             this.toolStripMenuExitItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(153, 76);
+            this.contextMenuStrip.Size = new System.Drawing.Size(113, 54);
             // 
             // updateToolStripMenuItem
             // 
@@ -353,7 +353,7 @@
             this.every10MinutesToolStripMenuItem,
             this.every15MinutesToolStripMenuItem});
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.updateToolStripMenuItem.Text = "Update";
             // 
             // disabledToolStripMenuItem
@@ -391,12 +391,12 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(109, 6);
             // 
             // toolStripMenuExitItem
             // 
             this.toolStripMenuExitItem.Name = "toolStripMenuExitItem";
-            this.toolStripMenuExitItem.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuExitItem.Size = new System.Drawing.Size(112, 22);
             this.toolStripMenuExitItem.Text = "Exit";
             this.toolStripMenuExitItem.Click += new System.EventHandler(this.toolStripMenuExitItem_Click);
             // 
@@ -414,7 +414,6 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "MainForm";
             this.Text = "Settings";
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

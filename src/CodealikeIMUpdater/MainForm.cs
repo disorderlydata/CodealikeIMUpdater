@@ -18,19 +18,11 @@ namespace CodealikeIMUpdater
         public event Action<IMUpdaterSettings> Save;
         public event Action<int> SetUpdateInterval;
 
-
         private static string[] hipChatStatus = new string[] { "Available", "Away", "DND" };
-        private Timer updateTimer;
-        private API.ICodealikeAPI codealikeApi;
-        private API.CodealikeStatus previousCodealikeStatus;
-        private API.IHipChatAPI hipChatApi;
 
         public MainForm()
         {
             InitializeComponent();
-
-            this.codealikeApi = new API.Impl.CodealikeAPI();
-            this.hipChatApi = new API.Impl.HipChatAPI();
 
             cbUnknown.Items.AddRange(hipChatStatus);
             cbCanInterrupt.Items.AddRange(hipChatStatus);
@@ -46,67 +38,6 @@ namespace CodealikeIMUpdater
 
             txtCannotInterruptMsg.Text = "On fire!";
             txtCanInterruptMsg.Text = "Trying to focus";
-
-            this.updateTimer = new Timer();
-            updateTimer.Interval = int.Parse(cbUpdateInterval.Text) * 1000 * 60;
-            this.updateTimer.Tick += updateTimer_Tick;
-        }
-
-        private void updateTimer_Tick(object sender, EventArgs e)
-        {
-            var codealikeStatus = this.codealikeApi.GetUsersStatus(txtCodealikeUser.Text);
-
-            if (codealikeStatus != previousCodealikeStatus)
-            {
-                var user = this.hipChatApi.GetUser(txtHipChatToken.Text, txtHipChatEmail.Text);
-
-                user.presence = new API.Presence()
-                {
-                    show = MapHipChatStatus(codealikeStatus),
-                    status = MapHipChatMessage(codealikeStatus)
-                };
-                string token = txtHipChatToken.Text;
-                hipChatApi.UpdateUserStatus(token, user);
-
-                previousCodealikeStatus = codealikeStatus;
-            }
-        }
-
-        private string MapHipChatMessage(API.CodealikeStatus codealikeStatus)
-        {
-            switch (codealikeStatus)
-            {
-                case API.CodealikeStatus.NoActivity:
-                    return txtNoActivityMsg.Text;
-                case API.CodealikeStatus.CanInterrupt:
-                    return txtCanInterruptMsg.Text;
-                case API.CodealikeStatus.CannotInterrupt:
-                    return txtCannotInterruptMsg.Text;
-                case API.CodealikeStatus.Unknown:
-                default:
-                    return txtUnknownMsg.Text;
-            }
-        }
-
-        private string MapHipChatStatus(API.CodealikeStatus codealikeStatus)
-        {
-            //away, available, dnd
-            switch (codealikeStatus)
-            {
-                case API.CodealikeStatus.NoActivity:
-                    return cbNoActivity.Text.ToLower();
-                case API.CodealikeStatus.CanInterrupt:
-                    return cbCanInterrupt.Text.ToLower();
-                case API.CodealikeStatus.CannotInterrupt:
-                    return cbCannotInterrupt.Text.ToLower();
-                case API.CodealikeStatus.Unknown:
-                default:
-                    return cbUnknown.Text.ToLower();
-            }
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -119,14 +50,14 @@ namespace CodealikeIMUpdater
                     HipChatToken = txtHipChatToken.Text,
                     HipChatEmail = txtHipChatEmail.Text,
                     UpdateInterval = int.Parse(cbUpdateInterval.Text),
-                    HipChatStatusMappings = GetMappings()
+                    HipChatStatusMappings = GetHipChatMappings()
                 };
 
                 Save(settings);
             }
         }
 
-        private List<HipChatStatusMapping> GetMappings()
+        private List<HipChatStatusMapping> GetHipChatMappings()
         {
             var unknown = new HipChatStatusMapping()
             {
@@ -203,7 +134,7 @@ namespace CodealikeIMUpdater
 
         public void ShowMessage(string message)
         {
-            MessageBox.Show(message);
+            MessageBox.Show(message, "CodealikeIMUpdater", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void updateIntervalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -240,6 +171,12 @@ namespace CodealikeIMUpdater
             {
                 item.Checked = true;
             }
+        }
+
+
+        public void ShowError(string message)
+        {
+            MessageBox.Show(message, "CodealikeIMUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

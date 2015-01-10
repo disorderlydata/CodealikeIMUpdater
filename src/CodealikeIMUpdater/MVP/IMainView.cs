@@ -12,6 +12,8 @@ namespace CodealikeIMUpdater.MVP
         event Action<string, string> TestHipChat;
         event Action<IMUpdaterSettings> Save;
         event Action<int> SetUpdateInterval;
+
         void ShowMessage(string message);
+        void ShowError(string message);
     }
 }
