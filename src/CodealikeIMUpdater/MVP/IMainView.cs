@@ -15,5 +15,6 @@ namespace CodealikeIMUpdater.MVP
 
         void ShowMessage(string message);
         void ShowError(string message);
+        void SetIconFromStatus(API.CodealikeStatus currentStatus);
     }
 }

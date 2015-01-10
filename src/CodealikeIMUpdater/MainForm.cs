@@ -38,6 +38,8 @@ namespace CodealikeIMUpdater
 
             txtCannotInterruptMsg.Text = "On fire!";
             txtCanInterruptMsg.Text = "Trying to focus";
+
+            this.notifyIcon.Icon = Resources.Unknown;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -173,10 +175,30 @@ namespace CodealikeIMUpdater
             }
         }
 
-
         public void ShowError(string message)
         {
             MessageBox.Show(message, "CodealikeIMUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public void SetIconFromStatus(API.CodealikeStatus currentStatus)
+        {
+            switch (currentStatus)
+            {
+                case API.CodealikeStatus.NoActivity:
+                    this.notifyIcon.Icon = Resources.NoActivity;
+                    break;
+                case API.CodealikeStatus.CanInterrupt:
+                    this.notifyIcon.Icon = Resources.CanInterrupt;
+                    break;
+                case API.CodealikeStatus.CannotInterrupt:
+                    this.notifyIcon.Icon = Resources.CannotInterrupt;
+                    break;
+                case API.CodealikeStatus.Unknown:
+                    this.notifyIcon.Icon = Resources.Unknown;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

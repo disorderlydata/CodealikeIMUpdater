@@ -101,6 +101,8 @@ namespace CodealikeIMUpdater.MVP
                 hipChatApi.UpdateUserStatus(settings.HipChatToken, user);
 
                 previousStatus = currentStatus;
+
+                view.SetIconFromStatus(currentStatus);
             }
         }
     }
