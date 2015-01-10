@@ -343,7 +343,7 @@
             this.toolStripSeparator1,
             this.toolStripMenuExitItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(113, 54);
+            this.contextMenuStrip.Size = new System.Drawing.Size(153, 76);
             // 
             // updateToolStripMenuItem
             // 
@@ -353,14 +353,17 @@
             this.every10MinutesToolStripMenuItem,
             this.every15MinutesToolStripMenuItem});
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.updateToolStripMenuItem.Text = "Update";
             // 
             // disabledToolStripMenuItem
             // 
+            this.disabledToolStripMenuItem.Enabled = false;
             this.disabledToolStripMenuItem.Name = "disabledToolStripMenuItem";
             this.disabledToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.disabledToolStripMenuItem.Text = "Disabled";
+            this.disabledToolStripMenuItem.Visible = false;
+            this.disabledToolStripMenuItem.Click += new System.EventHandler(this.updateIntervalToolStripMenuItem_Click);
             // 
             // every5MinutesToolStripMenuItem
             // 
@@ -369,28 +372,31 @@
             this.every5MinutesToolStripMenuItem.Name = "every5MinutesToolStripMenuItem";
             this.every5MinutesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.every5MinutesToolStripMenuItem.Text = "Every 5 minutes";
+            this.every5MinutesToolStripMenuItem.Click += new System.EventHandler(this.updateIntervalToolStripMenuItem_Click);
             // 
             // every10MinutesToolStripMenuItem
             // 
             this.every10MinutesToolStripMenuItem.Name = "every10MinutesToolStripMenuItem";
             this.every10MinutesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.every10MinutesToolStripMenuItem.Text = "Every 10 minutes";
+            this.every10MinutesToolStripMenuItem.Click += new System.EventHandler(this.updateIntervalToolStripMenuItem_Click);
             // 
             // every15MinutesToolStripMenuItem
             // 
             this.every15MinutesToolStripMenuItem.Name = "every15MinutesToolStripMenuItem";
             this.every15MinutesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.every15MinutesToolStripMenuItem.Text = "Every 15 minutes";
+            this.every15MinutesToolStripMenuItem.Click += new System.EventHandler(this.updateIntervalToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(109, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // toolStripMenuExitItem
             // 
             this.toolStripMenuExitItem.Name = "toolStripMenuExitItem";
-            this.toolStripMenuExitItem.Size = new System.Drawing.Size(112, 22);
+            this.toolStripMenuExitItem.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuExitItem.Text = "Exit";
             this.toolStripMenuExitItem.Click += new System.EventHandler(this.toolStripMenuExitItem_Click);
             // 

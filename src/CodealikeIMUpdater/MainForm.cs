@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodealikeIMUpdater.MVP;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,8 +11,13 @@ using System.Windows.Forms;
 
 namespace CodealikeIMUpdater
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IMainView
     {
+        public event Action<string> TestCodealike;
+        public event Action<string, string> TestHipChat;
+        public event Action<IMUpdaterSettings> Save;
+        public event Action<int> SetUpdateInterval;
+
 
         private static string[] hipChatStatus = new string[] { "Available", "Away", "DND" };
         private Timer updateTimer;
@@ -105,39 +111,73 @@ namespace CodealikeIMUpdater
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            updateTimer_Tick(null, null);
-
-            updateTimer.Interval = int.Parse(cbUpdateInterval.Text) * 1000 * 60;
-            if (!updateTimer.Enabled)
+            if (this.Save != null)
             {
-                updateTimer.Stop();
-            }
-            updateTimer.Start();
+                IMUpdaterSettings settings = new IMUpdaterSettings()
+                {
+                    CodealikeUsername = txtCodealikeUser.Text,
+                    HipChatToken = txtHipChatToken.Text,
+                    HipChatEmail = txtHipChatEmail.Text,
+                    UpdateInterval = int.Parse(cbUpdateInterval.Text),
+                    HipChatStatusMappings = GetMappings()
+                };
 
-            MessageBox.Show("Updated Settings.", "CodealikeIM Updater", MessageBoxButtons.OK);
-            //this.Hide();
+                Save(settings);
+            }
+        }
+
+        private List<HipChatStatusMapping> GetMappings()
+        {
+            var unknown = new HipChatStatusMapping()
+            {
+                CodealikeStatus = API.CodealikeStatus.Unknown,
+                HipChatMessage = txtUnknownMsg.Text,
+                HipChatStatus = cbUnknown.Text.ToLower()
+            };
+            var noActivity = new HipChatStatusMapping()
+            {
+                CodealikeStatus = API.CodealikeStatus.NoActivity,
+                HipChatMessage = txtNoActivityMsg.Text,
+                HipChatStatus = cbNoActivity.Text.ToLower()
+            };
+            var canInterrupt = new HipChatStatusMapping()
+            {
+                CodealikeStatus = API.CodealikeStatus.CanInterrupt,
+                HipChatMessage = txtCanInterruptMsg.Text,
+                HipChatStatus = cbCanInterrupt.Text.ToLower()
+            };
+            var cannotInterrupt = new HipChatStatusMapping()
+            {
+                CodealikeStatus = API.CodealikeStatus.CannotInterrupt,
+                HipChatMessage = txtCannotInterruptMsg.Text,
+                HipChatStatus = cbCannotInterrupt.Text.ToLower()
+            };
+
+
+            return new List<HipChatStatusMapping>()
+            {
+                unknown, noActivity, canInterrupt, cannotInterrupt
+            };
         }
 
         private void btnTestCodealike_Click(object sender, EventArgs e)
         {
-            string userName = txtCodealikeUser.Text;
-
-
-            var status = codealikeApi.GetUsersStatus(userName);
-
-            string message = string.Format("The current status for {0} is {1}", userName, status.ToString());
-            MessageBox.Show(message, "Codealike Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (this.TestCodealike != null)
+            {
+                string userName = txtCodealikeUser.Text;
+                this.TestCodealike(userName);
+            }
         }
 
         private void btnTestHipChat_Click(object sender, EventArgs e)
         {
-            string token = txtHipChatToken.Text;
-            string email = txtHipChatEmail.Text;
+            if (this.TestHipChat != null)
+            {
+                string token = txtHipChatToken.Text;
+                string email = txtHipChatEmail.Text;
 
-            var user = hipChatApi.GetUser(token, email);
-
-            var message = string.Format("{0} is currently set as {1} with the message '{2}'", user.name, user.presence.show, user.presence.status);
-            MessageBox.Show(message, "HipChat Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.TestHipChat(token, email);
+            }
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
@@ -157,6 +197,49 @@ namespace CodealikeIMUpdater
         private void toolStripMenuExitItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+
+
+        public void ShowMessage(string message)
+        {
+            MessageBox.Show(message);
+        }
+
+        private void updateIntervalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = null;
+            
+            this.disabledToolStripMenuItem.Checked = false;
+            this.every5MinutesToolStripMenuItem.Checked = false;
+            this.every10MinutesToolStripMenuItem.Checked = false;
+            this.every15MinutesToolStripMenuItem.Checked = false;
+
+            if (sender == this.disabledToolStripMenuItem)
+            {
+                item = this.disabledToolStripMenuItem;
+                this.SetUpdateInterval(0);
+            }
+            else if (sender == this.every5MinutesToolStripMenuItem)
+            {
+                item = this.every5MinutesToolStripMenuItem;
+                this.SetUpdateInterval(5);
+            }
+            else if (sender == this.every10MinutesToolStripMenuItem)
+            {
+                item = this.every10MinutesToolStripMenuItem;
+                this.SetUpdateInterval(10);
+            }
+            else if (sender == this.every15MinutesToolStripMenuItem)
+            {
+                item = this.every15MinutesToolStripMenuItem;
+                this.SetUpdateInterval(15);
+            }
+
+            if (item != null)
+            {
+                item.Checked = true;
+            }
         }
     }
 }
