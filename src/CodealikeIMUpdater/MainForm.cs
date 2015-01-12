@@ -18,7 +18,7 @@ namespace CodealikeIMUpdater
         public event Action<IMUpdaterSettings> Save;
         public event Action<int> SetUpdateInterval;
 
-        private static string[] hipChatStatus = new string[] { "Available", "Away", "DND" };
+        private static string[] hipChatStatus = new string[] { "Chat", "Away", "DND" };
 
         public MainForm()
         {
